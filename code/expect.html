@@ -174,6 +174,14 @@ _gaq.push(['_trackPageview']);
 <p>The <code>expect</code> interface provides a function as a starting point for chaining<br />your language assertions. It works on both node.js and in the browser.</p>
 
 <p>The <code>should</code> interface extends <code>Object.prototype</code> to provide a single getter as<br />the starting point for your language assertions. Most browser don't like<br />extensions to <code>Object.prototype</code> so it is not recommended for browser use.</p>
+
+<h4>Configuration</h4>
+
+<p>By default, Chai does not show stack traces upon an AssertionError. This can<br />be changed by modifying the <code>includeStack</code> parameter for chai.Assertion. For example:</p>
+
+<pre><code> var chai = require('chai');
+ chai.Assertion.includeStack = true; // defaults to false
+</code></pre>
           </div>
         </article>
         <article id="to-section" class="codeblock">
@@ -977,7 +985,7 @@ _gaq.push(['_trackPageview']);
           </div>
           <div class="description"><p>Assert the inclusion of an object in an Array or substring in string.</p>
 
-<pre><code> expect([1,2,3]).to.contain(2);
+<pre><code> expect([1,2,3]).to.include(2);
 </code></pre>
           </div>
           <div class="view-source">View Source
@@ -1010,7 +1018,7 @@ _gaq.push(['_trackPageview']);
           </div>
           <div class="description"><p>Assert inclusion of string in string.</p>
 
-<pre><code> expect('foobar').to.include.string('bar');
+<pre><code> expect('foobar').to.have.string('bar');
 </code></pre>
           </div>
           <div class="view-source">View Source
