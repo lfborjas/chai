@@ -627,4 +627,37 @@ suite('expect', function () {
       expect(2).to.be.closeTo(1.0, 0.5);
     }, "expected 2 to be close to 1 +/- 0.5");
   });
+
+  test('change - by', function(){
+    var subject = null;
+    var fn = null;
+
+    subject = { number: 0 };
+    fn = function() { --subject.number; };
+    expect(fn).to.change(subject, 'number').by(-1);
+
+    subject = { number: 0 };
+    fn = function() { ++subject.number; };
+    expect(fn).to.not.change(subject, 'number').by(-1);
+
+    subject = {
+      value: 1,
+      number: function() {
+        return this.value;
+      }
+    };
+    fn = function() { ++subject.value; };
+    expect(fn).to.change(subject, 'number').by(1);
+
+    subject = { number: 0 };
+    fn = function() { ++subject.number; };
+
+    err(function(){
+      expect(fn).to.change(subject, 'number').by(-1);
+    }, "expected [Function] to change the subject by -1");
+
+    err(function(){
+      expect(fn).to.not.change(subject, 'number').by(1);
+    }, "expected [Function] to not change the subject by 1");
+  });
 });
