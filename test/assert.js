@@ -390,7 +390,12 @@ suite('assert', function () {
   test('property', function () {
     var obj = { foo: { bar: 'baz' } };
     var simpleObj = { foo: 'bar' };
+    var evilObj   = { gone: undefined };
+    var evilObj2 = Object.create(evilObj);
+
     assert.property(obj, 'foo');
+    assert.propertyVal(evilObj, 'gone', undefined);
+    assert.propertyVal(evilObj2, 'gone', undefined);
     assert.deepProperty(obj, 'foo.bar');
     assert.notProperty(obj, 'baz');
     assert.notProperty(obj, 'foo.bar');
@@ -419,8 +424,17 @@ suite('assert', function () {
     }, "expected { foo: 'bar' } to have a property 'foo' of 'ball', but got 'bar'");
 
     err(function () {
+      assert.propertyVal(evilObj, 'foo', undefined);
+    }, "expected { gone: undefined } to have a property 'foo'");
+
+    err(function () {
+      assert.propertyVal(evilObj, 'gone', 42);
+    }, "expected { gone: undefined } to have a property 'gone'");
+
+    err(function () {
       assert.deepPropertyVal(obj, 'foo.bar', 'ball');
     }, "expected { foo: { bar: 'baz' } } to have a deep property 'foo.bar' of 'ball', but got 'baz'");
+
 
     err(function () {
       assert.propertyNotVal(simpleObj, 'foo', 'bar');
