@@ -83,8 +83,9 @@ suite('assert', function () {
   });
 
   test('equal', function () {
-    var foo;
+    var foo, bar = NaN;
     assert.equal(foo, undefined);
+    assert.equal(bar, NaN);
   });
 
   test('typeof / notTypeOf', function () {
@@ -316,6 +317,7 @@ suite('assert', function () {
   test('isNumber', function() {
     assert.isNumber(1);
     assert.isNumber(Number('3'));
+    assert.isNumber(NaN);
 
     err(function () {
       assert.isNumber('1');
@@ -390,13 +392,21 @@ suite('assert', function () {
   test('property', function () {
     var obj = { foo: { bar: 'baz' } };
     var simpleObj = { foo: 'bar' };
+    var nanObj = { floop: NaN, boop: -0, doop: { scoop: NaN, hadoop: -0 } };
+
     assert.property(obj, 'foo');
+    assert.propertyVal(nanObj, "floop", NaN);
+    assert.propertyVal(nanObj, 'boop', -0);
+    assert.propertyNotVal(nanObj, 'boop', +0);
     assert.deepProperty(obj, 'foo.bar');
     assert.notProperty(obj, 'baz');
     assert.notProperty(obj, 'foo.bar');
     assert.notDeepProperty(obj, 'foo.baz');
     assert.deepPropertyVal(obj, 'foo.bar', 'baz');
+    assert.deepPropertyVal(nanObj, 'doop.scoop', NaN);
+    assert.deepPropertyVal(nanObj, 'doop.hadoop', -0);
     assert.deepPropertyNotVal(obj, 'foo.bar', 'flow');
+    assert.deepPropertyNotVal(nanObj, 'doop.hadoop', +0);
 
     err(function () {
       assert.property(obj, 'baz');
@@ -417,6 +427,14 @@ suite('assert', function () {
     err(function () {
       assert.propertyVal(simpleObj, 'foo', 'ball');
     }, "expected { foo: 'bar' } to have a property 'foo' of 'ball', but got 'bar'");
+
+    err(function () {
+      assert.propertyVal(simpleObj, 'foo', NaN);
+    }, "expected { foo: 'bar' } to have a property 'foo' of NaN, but got 'bar'");
+
+    err(function () {
+      assert.propertyVal(nanObj, 'floop', 42);
+    }, "expected { floop: NaN, boop: -0, doop: { scoop: NaN, hadoop: -0 } } to have a property 'foo' of 42 but got NaN");
 
     err(function () {
       assert.deepPropertyVal(obj, 'foo.bar', 'ball');
